@@ -28,31 +28,20 @@
     "dist"
   ],
   "keywords": [
-    "example",
-    "typescript",
-    "npm",
-    "package",
-    "sample",
-    "boilerplate",
-    "starter",
-    "demo",
-    "cjs",
-    "esm",
-    "umd"
+    "typescript"
   ],
-  "author": "Tom Chen <tomchen.org@gmail.com>",
+  "author": "Amresh Venugopal <amresh.venugopal@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/tomchen/example-typescript-package",
+  "homepage": "https://github.com/ltbringer/ltengine",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tomchen/example-typescript-package.git"
+    "url": "git@github.com:ltbringer/ltengine.git"
   },
   "bugs": {
-    "url": "https://github.com/tomchen/example-typescript-package/issues"
+    "url": "https://github.com/ltbringer/ltengine/issues"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@commitlint/cli": "^13.1.0",
+    "@commitlint/cli": "^18.2.0",
     "@commitlint/config-conventional": "^13.1.0",
     "@types/jest": "^27.0.1",
     "@typescript-eslint/eslint-plugin": "^4.31.1",

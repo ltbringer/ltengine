@@ -10,6 +10,7 @@ module.exports = {
     libraryTarget: 'umd',
     globalObject: 'this',
   },
+  watch: process.env.NODE_ENV === "dev",
   module: {
     rules: [
       {

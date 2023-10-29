@@ -1,4 +1,4 @@
-import { matrix } from '@/src/utils/matrix' // @ts-ignore: Cannot find module
+import { matrix } from '../../../src/utils/matrix'
 
 
 describe('matrix', () => {

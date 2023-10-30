@@ -1,4 +1,5 @@
 import { Coordinates } from "../environment";
+import { EntityConfig, Entity } from "../entity";
 
 class Speed {
     x: number;
@@ -10,23 +11,28 @@ class Speed {
     }
 }
 
-interface ActorConfig {
-    coordinates: Coordinates,
-    speed: Speed
+interface ActorConfig extends EntityConfig {
+    speed: Speed,
 }
 
-export class Actor {
-    coordinates: Coordinates;
+export interface ActorMove {
+    coordinates: Coordinates,
+    actor: Actor,
+}
+
+export class Actor extends Entity {
     speed: Speed;
 
-    constructor(config: ActorConfig) {
-        this.coordinates = config.coordinates
+    constructor(id: number, config: ActorConfig) {
+        super(id, config)
         this.speed = config.speed
     }
 
     moveTo(coordinates: Coordinates) {
-        // 1. clamp by bounds, collision
-        // 2. move Animation
-        // 3. update coordinates
+        window.dispatchEvent(new CustomEvent("actorMove", { detail: { coordinates, actor: this }, bubbles: false }));
+    }
+
+    motionUpdate(coordinates: Coordinates) {
+        this.coordinates = coordinates;
     }
 }

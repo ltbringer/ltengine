@@ -1,17 +1,15 @@
 import { Entity } from "../entity"
 
 export class RenderEngine {
-    canvasId: string
     dims: number
-    canvas: HTMLCanvasElement | null
-    ctx: CanvasRenderingContext2D | null | undefined
+    canvas: HTMLCanvasElement
+    ctx: CanvasRenderingContext2D
     resolution: number
 
-    constructor(canvasId: string, dims: number, resolution: number = 20) {
-        this.canvasId = canvasId
-        this.dims = dims;
-        this.canvas = document.querySelector(this.canvasId)
-        this.ctx = this.canvas?.getContext("2d")
+    constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, dims: number, resolution: number = 20) {
+        this.dims = dims
+        this.canvas = canvas
+        this.ctx = ctx
         // 1 cell in the map is 5 pixel on the canvas.
         this.resolution = resolution
         this.canvas?.setAttribute('width', `${dims * resolution}px`)
@@ -19,16 +17,10 @@ export class RenderEngine {
     }
 
     clear() {
-        if (!this.ctx) {
-            return
-        }
         this.ctx.clearRect(0, 0, this.dims * this.resolution, this.dims * this.resolution)
     }
 
     renderEntity(entities: Entity[]) {
-        if (!this.ctx) {
-            return
-        }
         for (let entity of entities) {
             if (entity.color) {
                 this.ctx.fillStyle = entity.color
@@ -52,9 +44,6 @@ export class RenderEngine {
     }
 
     renderMap(map: number[][]) {
-        if (!this.ctx) {
-            return
-        }
         for (let row = 0; row < map.length; row++) {
             for (let col = 0; col < map.length; col++) {
                 this.ctx.strokeStyle = map[row][col] === 0 ? '#444' : '#000'

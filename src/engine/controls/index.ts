@@ -77,8 +77,8 @@ export const manualCtl = (canvas: HTMLCanvasElement, resolution: number) => (ctl
         }
         const itemKey = keys.ITEM.exec(e.code);
         if (itemKey && itemKey.length > 1) {
-            const itemIndex = parseInt(itemKey[1]);
-            ctl.pickItem(itemIndex);
+            const itemIndex = parseInt(itemKey[1]) - 1;
+            ctl.pickItem(itemIndex < 0 ? 10 : itemIndex);
         }
     }
     canvas.onclick = (e) => {

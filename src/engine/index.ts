@@ -64,6 +64,7 @@ const item = new Item(25, {
                     x: 1,
                     y: 1
                 },
+                moveSpeed: 20,
             })
             window.dispatchEvent(new CustomEvent('particleEffects', { detail: bullet }))
         },

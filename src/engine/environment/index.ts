@@ -88,13 +88,9 @@ export class Environment {
             for (let col = 0; col < this.dims; col++) {
                 const result = entitymap.get(`${col},${row}`);
                 if (result) {
-                    const { entity, idx } = result;
+                    const { entity } = result;
                     this.map[row][col] = entity.id || WALKABLE;
                     this.registerEntity(entity);
-                    if (entity && entity.type === EntityType.PARTICLE && tick === 1) {
-                        console.log(entity)
-                        this.particleHandler(entity as Particle, idx)
-                    }
                 }
             }
         }
@@ -124,9 +120,27 @@ export class Environment {
         return false
     }
 
-    collisionDetection(nextPos: Coordinates): Entity | null {
-        const { x, y } = nextPos;
-        const entityId = this.map[y][x];
+    idAt(coordinates: Coordinates): number {
+        const { x, y } = coordinates;
+        const x_ = Math.floor(x);
+        const y_ = Math.floor(y);
+        return this.map[y_][x_];
+    }
+
+    idSetAt(coordinates: Coordinates, id: number) {
+        const { x, y } = coordinates;
+        const x_ = Math.floor(x);
+        const y_ = Math.floor(y);
+        this.map[y_][x_] = id;
+    }
+
+    collisionDetection(id: number, groupIds: number[], nextPos: Coordinates): Entity | null {
+        // groupIds can help toggle friendly fire.
+        // i.e. should entities with same groupId collide?
+        const entityId = this.idAt(nextPos);
+        if (entityId === id) {
+            return null
+        }
         const entity = this.entityRegistry.get(entityId);
         if (entity) {
             return entity
@@ -135,13 +149,11 @@ export class Environment {
     }
 
     unregisterPos(e: Entity) {
-        const { x, y } = e.coordinates;
-        this.map[y][x] = WALKABLE
+        this.idSetAt(e.coordinates, WALKABLE);
     }
 
     registerPos(e: Entity) {
-        const { x, y } = e.coordinates;
-        this.map[y][x] = e.id
+        this.idSetAt(e.coordinates, e.id);
     }
 
     allowMotion(actor: Actor, nextPos: Coordinates) {
@@ -156,7 +168,7 @@ export class Environment {
         if (this.outOfBounds(actor, nextPos)) {
             return;
         }
-        const collidingEntity = this.collisionDetection(nextPos);
+        const collidingEntity = this.collisionDetection(actor.id, actor.groupIds, nextPos);
         if (collidingEntity) {
             nextPos = this.collision(actor, collidingEntity, nextPos);
         }
@@ -164,28 +176,28 @@ export class Environment {
     }
 
     particleHandler(particle: Particle, index: number) {
-        const { coordinates, destination, speed } = particle;
-        if (this.outOfBounds(particle, destination)) {
+        const removeParticle = () => {
             this.entities.splice(index, 1);
             this.unregisterPos(particle);
-            return;
+            clearInterval(motion);
         }
-        const diff = new Coordinates(destination.x - coordinates.x, destination.y - coordinates.y)
-        const diffClamped = diff.clamp(-1, 1)
-        const nextPos = coordinates.add(new Coordinates(speed.x * diffClamped.x, speed.y * diffClamped.y));
-        console.log(coordinates)
-        console.log(nextPos)
-        const collidingEntity = this.collisionDetection(nextPos);
-        particle.coordinates = nextPos;
-
-        console.log(this.map)
-        console.log(this.entities[index])
-
-        if (collidingEntity) {
-            this.entities.splice(index, 1);
-            this.unregisterPos(particle);
-            return;
+        const move = () => {
+            const { coordinates, destination, speed } = particle;
+            if (this.outOfBounds(particle, destination)) {
+                return removeParticle();
+            }
+            const diff = new Coordinates(destination.x - coordinates.x, destination.y - coordinates.y)
+            const diffClamped = diff.clamp(-1, 1)
+            const nextPos = coordinates.add(new Coordinates(speed.x * diffClamped.x, speed.y * diffClamped.y));
+            const collidingEntity = this.collisionDetection(particle.id, particle.groupIds, nextPos);
+            const atDestination = nextPos.x === destination.x && nextPos.y === destination.y
+            particle.coordinates = nextPos;
+            if (collidingEntity || atDestination) {
+                return removeParticle();
+            }
         }
+
+        const motion = setInterval(move, particle.moveSpeed);
     }
 
     collision(actor: Actor, hitEntity: Entity, nextPos: Coordinates): Coordinates {
@@ -220,6 +232,7 @@ export class Environment {
         let lastTime = 0;
         let frameCount = 0;
         let fps = 0;
+        let tick = 0;
         const loop = (currentTime: number) => {
             const deltaTime = (currentTime - lastTime) / 1000; // Convert to seconds
 
@@ -229,19 +242,11 @@ export class Environment {
                 fps = frameCount / deltaTime;
                 frameCount = 0;
                 lastTime = currentTime;
+                tick = Math.floor(lastTime / 1000);
             }
 
-            if (fps > 60) {
-                this.mapEntities(1);
-            } else {
-                this.mapEntities(0);
-            }
+            this.mapEntities(tick);
             this.render(grid);
-
-            // Log FPS
-            console.log(`FPS: ${fps.toFixed(2)}`);
-
-            // Request the next frame
             window.requestAnimationFrame(loop);
         };
         loop(0);

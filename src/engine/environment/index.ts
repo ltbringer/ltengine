@@ -2,7 +2,7 @@ import { Grid } from './grid'
 
 enum Mode {
   GAME = 'game',
-  EDIT = 'edit'
+  EDIT = 'edit',
 }
 
 const posAsKey = (pos: IPosition) => `${pos.x},${pos.y}`

@@ -28,7 +28,10 @@ export class Environment {
     this.ctx = ctx
     this.scale = scale
     this.mode = Mode.GAME
-    this.canvas.addEventListener('keydown', this.handleKeyDown.bind(this))
+  getId() {
+    const id = this.ids.size + 1
+    this.ids.add(id)
+    return id
   }
 
   handleKeyDown(e: KeyboardEvent) {

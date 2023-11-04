@@ -37,6 +37,11 @@ export class Environment {
     this.idMap = new Map()
     this.posMap = new Map()
     this.objects = []
+    this.activeCMD = new Set()
+    window.addEventListener('keydown', this.handleKeyDown.bind(this))
+    this.canvas.addEventListener('click', this.handleClick.bind(this))
+  }
+
   getId() {
     const id = this.ids.size + 1
     this.ids.add(id)
@@ -46,14 +51,36 @@ export class Environment {
   handleKeyDown(e: KeyboardEvent) {
     switch (e.code) {
       case 'KeyE':
-        this.mode = Mode.EDIT
-        break;
       case 'KeyG':
-        this.mode = Mode.GAME
+      case 'KeyS':
+      case 'KeyL':
+      case 'ShiftLeft':
+      case 'AltLeft':
+        this.activeCMD.add(e.code)
         break;
       default:
+        this.activeCMD.clear()
         break;
     }
+
+    if (this.activeCMD.has('AltLeft') && this.activeCMD.has('ShiftLeft')) {
+      if (this.activeCMD.has('KeyE')) {
+        this.activeCMD.clear()
+        this.mode = Mode.EDIT
+      } else if (this.activeCMD.has('KeyG')) {
+        this.activeCMD.clear()
+        this.mode = Mode.GAME
+      } else if (this.activeCMD.has('KeyS')) {
+        this.activeCMD.clear()
+        this.mode = Mode.GAME
+        this.saveGameState()
+      } else if (this.activeCMD.has('KeyL')) {
+        this.activeCMD.clear()
+        this.mode = Mode.GAME
+        this.loadGameState()
+      }
+    }
+  }
   registerEntity(obj: Obj) {
     this.grid.insert(obj.position, obj)
     this.idMap.set(obj.id, obj)
@@ -68,6 +95,22 @@ export class Environment {
     this.objects = this.objects.filter((e) => e.id !== obj.id)
   }
 
+  handleClick(e: MouseEvent) {
+    const x = Math.floor(e.offsetX / this.scale)
+    const y = Math.floor(e.offsetY / this.scale)
+
+    const editMode = this.mode === Mode.EDIT
+    const existingEntity = this.posMap.get(posAsKey({ x, y }))
+
+    if (!this.boundsCheck({ x, y })) {
+      return
+    }
+
+    if (editMode && existingEntity) {
+      this.unregisterEntity(existingEntity)
+    } else if (editMode && !existingEntity) {
+      this.createEntity(x, y)
+    }
   }
 
   render() {

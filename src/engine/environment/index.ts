@@ -79,16 +79,16 @@ export class Environment {
       } else if (this.activeCMD.has('KeyS')) {
         this.activeCMD.clear()
         this.mode = Mode.GAME
-        this.saveGameState()
+        this.save()
       } else if (this.activeCMD.has('KeyL')) {
         this.activeCMD.clear()
         this.mode = Mode.GAME
-        this.loadGameState()
+        this.load()
       }
     }
   }
 
-  saveGameState() {
+  save() {
     localStorage.setItem('gamedata', JSON.stringify(
       this.objects.map((e) => ({
         id: e.id,
@@ -102,7 +102,7 @@ export class Environment {
     ))
   }
 
-  loadGameState() {
+  load() {
     console.log('retrieving game data')
     const gamedata = localStorage.getItem('gamedata')
     if (gamedata) {
@@ -138,7 +138,7 @@ export class Environment {
       position: { x, y },
       width,
       height,
-      shape: new Rectangle(width, height, id),
+      color: 'black',
       collisionEffect: CollisionEffects.BLOCK,
     }, this)
     this.registerEntity(obj)
@@ -186,6 +186,7 @@ export class Environment {
         avgFPS = fpsHist.reduce((a, b) => a + b, 0) / fpsHist.length;
         fpsHist = [];
       }
+      this.ctx.fillStyle = 'black'
       this.ctx.fillText(`FPS: ${avgFPS.toFixed(1)}`, this.canvas.width - 100, 20)
       this.ctx.fillText(`Mode: ${this.mode}`, this.canvas.width - 100, 40)
       this.grid.render(this.ctx, this.scale)

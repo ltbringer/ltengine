@@ -8,17 +8,20 @@ export class Matrix {
   constructor(m: number, n: number, value: number) {
     this.m = m
     this.n = n
-    this.data = this.fill(value)
+    this.data = []
+    this.fill(value)
   }
 
   shape(): string {
     return `shape=(${this.m}x${this.n})`
   }
 
-  private fill(value: number): number[][] {
-    return Array(this.m)
+  fill(value: number): Matrix {
+    const v = Array(this.m)
       .fill(0)
       .map(() => Array(this.n).fill(value))
+    this.data = v
+    return this
   }
 
   merge(m2: Matrix, position: IPosition): Matrix {

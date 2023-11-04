@@ -13,6 +13,4 @@ export class Rectangle {
     }
 }
 
-export const shapes2D = {
-    Rectangle
-}
+export type Shape2D = Rectangle;

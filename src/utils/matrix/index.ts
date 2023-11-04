@@ -4,11 +4,11 @@ import { MatrixOverflow } from './errors'
 export class Matrix {
   m: number
   n: number
-  state: number[][]
+  data: number[][]
   constructor(m: number, n: number, value: number) {
     this.m = m
     this.n = n
-    this.state = this.fill(value)
+    this.data = this.fill(value)
   }
 
   shape(): string {
@@ -43,7 +43,7 @@ export class Matrix {
       for (let j = 0; j < m2.n; j++) {
         const i_ = i + position.y
         const j_ = j + position.x
-        this.state[i_][j_] = m2.state[i][j]
+        this.data[i_][j_] = m2.data[i][j]
       }
     }
 

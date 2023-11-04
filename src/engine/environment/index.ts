@@ -1,12 +1,12 @@
-import { Grid2D } from './grid2D';
+import { Grid } from './grid';
 
-class Environment {
+export class Environment2D {
     m: number;
     n: number;
-    grid: Grid2D;
+    grid: Grid;
     constructor(m: number, n: number) {
         this.m = m;
         this.n = n;
-        this.grid = new Grid2D(m, n);
+        this.grid = new Grid(m, n);
     }
 }

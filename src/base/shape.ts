@@ -1,5 +1,9 @@
 import { Matrix } from "../utils/matrix";
 
+export interface Shape {
+    asMatrix(value: number): Matrix;
+}
+
 export class Rectangle {
     width: number;
     height: number;
@@ -12,5 +16,3 @@ export class Rectangle {
         return new Matrix(this.height, this.width, value);
     }
 }
-
-export type Shape2D = Rectangle;

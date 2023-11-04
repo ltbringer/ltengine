@@ -1,4 +1,4 @@
-import { Position2D, IPosition2D } from "../../base/position2D";
+import { Position, IPosition } from "../../base/position";
 import { MatrixOverflow } from "./errors";
 
 export class Matrix {
@@ -19,8 +19,8 @@ export class Matrix {
         return Array(this.m).fill(0).map(() => Array(this.n).fill(value))
     }
 
-    merge(m2: Matrix, position: IPosition2D): Matrix {
-        const pos = new Position2D(position.x, position.y);
+    merge(m2: Matrix, position: IPosition): Matrix {
+        const pos = new Position(position.x, position.y);
         const exceedsM = m2.n > this.n;
         const exceedsN = m2.m > this.m;
         const exceedsPosX = position.x + m2.n > this.n;

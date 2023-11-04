@@ -1,9 +1,9 @@
-export interface IPosition2D {
+export interface IPosition {
     x: number;
     y: number;
 }
 
-export class Position2D implements IPosition2D {
+export class Position implements IPosition {
     x: number;
     y: number;
     constructor(x: number, y: number) {

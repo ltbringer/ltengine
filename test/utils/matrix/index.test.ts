@@ -25,7 +25,7 @@ describe('matrix', () => {
   ])(
     'should create a %i x %i matrix of %i values',
     ({ rows, cols, value, expected }) => {
-      const result = new Matrix(rows, cols, value).state
+      const result = new Matrix(rows, cols, value).data
       expect(result).toEqual(expected)
     }
   )
@@ -79,7 +79,7 @@ describe('matrix.merge', () => {
     if (expectError) {
       expect(() => m1_.merge(m2_, position)).toThrow(MatrixOverflow)
     } else {
-      const result = m1_.merge(m2_, position).state
+      const result = m1_.merge(m2_, position).data
       expect(result).toEqual(expected)
     }
   })

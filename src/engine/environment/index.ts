@@ -5,6 +5,8 @@ enum Mode {
   EDIT = 'edit'
 }
 
+const posAsKey = (pos: IPosition) => `${pos.x},${pos.y}`
+
 export class Environment {
   m: number
   n: number

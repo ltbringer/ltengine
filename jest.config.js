@@ -11,10 +11,10 @@ module.exports = {
   },
   globals: {
     'ts-jest': {
-      tsconfig: 'tsconfig.json'
-    }
+      tsconfig: 'tsconfig.json',
+    },
   },
   moduleNameMapper: {
-    '@/src/(.*)': '<rootDir>/src/$1'
-  }
+    '@/src/(.*)': '<rootDir>/src/$1',
+  },
 }

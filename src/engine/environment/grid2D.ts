@@ -1,5 +1,5 @@
-import { Position2D } from "../../base2D/position2D";
-import { Shape2D } from "../../base2D/shape2D";
+import { Position2D } from "../../base/position2D";
+import { Shape2D } from "../../base/shape2D";
 
 export class Grid2D {
     rows: number;

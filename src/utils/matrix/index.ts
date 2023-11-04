@@ -1,4 +1,4 @@
-import { Position2D, IPosition2D } from "../../base2D/position2D";
+import { Position2D, IPosition2D } from "../../base/position2D";
 import { MatrixOverflow } from "./errors";
 
 export class Matrix {

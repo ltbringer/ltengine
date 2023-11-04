@@ -95,6 +95,30 @@ export class Environment {
     this.objects = this.objects.filter((e) => e.id !== obj.id)
   }
 
+  createEntity(x: number, y: number) {
+    const width = 1
+    const height = 1
+    const id = this.getId()
+    const obj = new Obj({
+      id,
+      groupIds: [1],
+      position: { x, y },
+      width,
+      height,
+      shape: new Rectangle(width, height, id),
+      collisionEffect: CollisionEffects.BLOCK,
+    }, this)
+    this.registerEntity(obj)
+  }
+
+  boundsCheck(pos: IPosition): boolean {
+    const underM = pos.x >= 0
+    const underN = pos.y >= 0
+    const exceedsM = pos.x < this.m
+    const exceedsN = pos.y < this.n
+    return (underM && underN && exceedsM && exceedsN)
+  }
+
   handleClick(e: MouseEvent) {
     const x = Math.floor(e.offsetX / this.scale)
     const y = Math.floor(e.offsetY / this.scale)
@@ -130,7 +154,11 @@ export class Environment {
         fpsHist = [];
       }
       this.ctx.fillText(`FPS: ${avgFPS.toFixed(1)}`, this.canvas.width - 100, 20)
+      this.ctx.fillText(`Mode: ${this.mode}`, this.canvas.width - 100, 40)
       this.grid.render(this.ctx, this.scale)
+      for (const object of this.objects) {
+        object.render(this.ctx, this.scale)
+      }
       requestAnimationFrame(renderLoop)
     }
     renderLoop()

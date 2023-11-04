@@ -1,5 +1,4 @@
-import { Position } from '../position'
-import { Environment } from '../../engine/environment'
+import { IPosition } from '../position'
 import { Rectangle } from '../shape'
 
 /**
@@ -15,15 +14,10 @@ export enum CollisionEffects {
 
 export interface IEntity {
   id: number
-  groupIds: string[]
-  type: string
-  symbol: string
+  groupIds: number[]
   width: number
   height: number
-  position: Position
+  position: IPosition
   shape: Rectangle
   collisionEffect: CollisionEffects
-  env: Environment
-  render: (ctx: CanvasRenderingContext2D) => void
-  onCollision: (entity: IEntity) => void
 }

@@ -11,5 +11,5 @@ const ctx = canvas.getContext('2d');
 if (!ctx) {
     throw new Error('Could not create canvas context');
 }
-const env = new Environment(20, 20, canvas, ctx, 50);
+const env = new Environment(50, 50, canvas, ctx, 20);
 env.render();

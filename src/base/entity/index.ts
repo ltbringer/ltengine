@@ -18,6 +18,6 @@ export interface IEntity {
   width: number
   height: number
   position: IPosition
-  shape: Rectangle
   collisionEffect: CollisionEffects
+  color: string
 }

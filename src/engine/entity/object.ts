@@ -10,10 +10,11 @@ export class Obj implements IEntity {
   type: string
   width: number
   height: number
-  shape: Rectangle
   position: Position
   collisionEffect: CollisionEffects
   env: Environment
+  color: string
+  shape: Rectangle
   constructor(config: IEntity, env: Environment) {
     // Representational properties
     this.id = config.id
@@ -24,6 +25,7 @@ export class Obj implements IEntity {
     this.position = new Position(config.position.x, config.position.y);
     this.width = config.width
     this.height = config.height
+    this.color = config.color
     this.shape = new Rectangle(this.width, this.height, this.id)
     this.collisionEffect = config.collisionEffect
 
@@ -41,7 +43,7 @@ export class Obj implements IEntity {
   }
 
   render(ctx: CanvasRenderingContext2D, scale: number) {
-    ctx.fillStyle = 'black'
+    ctx.fillStyle = this.color
     ctx.fillRect(this.position.x * scale, this.position.y * scale, this.width * scale, this.height * scale)
   }
 }

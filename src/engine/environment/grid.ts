@@ -1,21 +1,20 @@
-import { Matrix } from "../../utils/matrix";
-import { Position } from "../../base/position";
-import { Shape } from "../../base/shape";
+import { Matrix } from '../../utils/matrix'
+import { Position } from '../../base/position'
+import { IEntity } from '../../base/entity'
 
-
-export const EMPTY = 0;
+export const EMPTY = 0
 
 export class Grid {
-    rows: number;
-    cols: number;
-    state: Matrix;
-    constructor(rows: number, cols: number) {
-        this.rows = rows;
-        this.cols = cols;
-        this.state = new Matrix(rows, cols, EMPTY);
-    }
+  rows: number
+  cols: number
+  state: Matrix
+  constructor(rows: number, cols: number) {
+    this.rows = rows
+    this.cols = cols
+    this.state = new Matrix(rows, cols, EMPTY)
+  }
 
-    insert(pos: Position, shape: Shape) {
-
-    }
+  insert(pos: Position, entity: IEntity) {
+    this.state.merge(entity.shape.asMatrix(), pos)
+  }
 }

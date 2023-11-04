@@ -65,6 +65,14 @@ describe('matrix.merge', () => {
       position: { x: 2, y: 2 },
       expectError: true,
     },
+    {
+      description:
+        'should throw MatrixOverflow when merging a 3x3 matrix of 1 values into a 2x2 matrix at (0, 0)',
+      m1: { rows: 2, cols: 2, value: 0 },
+      m2: { rows: 3, cols: 3, value: 1 },
+      position: { x: 0, y: 0 },
+      expectError: true,
+    },
   ])('%s', ({ description, m1, m2, position, expected, expectError }) => {
     const m1_ = new Matrix(m1.rows, m1.cols, m1.value)
     const m2_ = new Matrix(m2.rows, m2.cols, m2.value)

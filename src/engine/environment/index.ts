@@ -13,6 +13,11 @@ export class Environment {
   ctx: CanvasRenderingContext2D
   scale: number
   mode: Mode
+  ids: Set<number>
+  idMap: Map<number, Obj>
+  posMap: Map<string, Obj>
+  objects: Obj[]
+  activeCMD: Set<string>
 
   constructor(
     m: number,
@@ -28,6 +33,10 @@ export class Environment {
     this.ctx = ctx
     this.scale = scale
     this.mode = Mode.GAME
+    this.ids = new Set()
+    this.idMap = new Map()
+    this.posMap = new Map()
+    this.objects = []
   getId() {
     const id = this.ids.size + 1
     this.ids.add(id)
@@ -45,6 +54,20 @@ export class Environment {
       default:
         break;
     }
+  registerEntity(obj: Obj) {
+    this.grid.insert(obj.position, obj)
+    this.idMap.set(obj.id, obj)
+    this.posMap.set(posAsKey(obj.position), obj)
+    this.objects.push(obj)
+  }
+
+  unregisterEntity(obj: Obj) {
+    this.grid.remove(obj.position, obj)
+    this.idMap.delete(obj.id)
+    this.posMap.delete(posAsKey(obj.position))
+    this.objects = this.objects.filter((e) => e.id !== obj.id)
+  }
+
   }
 
   render() {

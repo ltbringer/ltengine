@@ -1,4 +1,8 @@
 import { Grid } from './grid'
+import { Obj } from '../entity/object'
+import { CollisionEffects } from '../../base/entity';
+import { Rectangle } from '../../base/shape';
+import { IPosition } from '../../base/position';
 
 enum Mode {
   GAME = 'game',
@@ -83,6 +87,33 @@ export class Environment {
       }
     }
   }
+
+  saveGameState() {
+    localStorage.setItem('gamedata', JSON.stringify(
+      this.objects.map((e) => ({
+        id: e.id,
+        groupIds: e.groupIds,
+        position: e.position,
+        width: e.width,
+        height: e.height,
+        shape: e.shape,
+        collisionEffect: e.collisionEffect,
+      }))
+    ))
+  }
+
+  loadGameState() {
+    console.log('retrieving game data')
+    const gamedata = localStorage.getItem('gamedata')
+    if (gamedata) {
+      const gameobjects = JSON.parse(gamedata)
+      for (const object of gameobjects) {
+        const obj = new Obj(object, this)
+        this.registerEntity(obj)
+      }
+    }
+  }
+
   registerEntity(obj: Obj) {
     this.grid.insert(obj.position, obj)
     this.idMap.set(obj.id, obj)

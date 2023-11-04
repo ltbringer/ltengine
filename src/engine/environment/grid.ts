@@ -1,6 +1,6 @@
 import { Matrix } from '../../utils/matrix'
-import { Position, IPosition } from '../../base/position'
-import { IEntity } from '../../base/entity'
+import { IPosition } from '../../base/position'
+import { Obj } from '../entity/object'
 
 export const EMPTY = 0
 
@@ -14,12 +14,39 @@ export class Grid {
     this.state = new Matrix(rows, cols, EMPTY)
   }
 
-  insert(pos: IPosition, entity: IEntity) {
-    this.state.merge(entity.shape.asMatrix(), pos)
+  insert(pos: IPosition, obj: Obj) {
+    const shapeMatrix = obj.shape.asMatrix()
+    // check if there are non-empty cells in the state to be merged.
+    for (let i = 0; i < shapeMatrix.m; i++) {
+      for (let j = 0; j < shapeMatrix.n; j++) {
+        const i_ = i + pos.x
+        const j_ = j + pos.y
+        if (this.state.data[i_][j_] !== EMPTY) {
+          console.log(this.state.data[i_][j_], i_, j_, obj)
+          throw new Error(
+            `Cannot insert object at ${pos.x},${pos.y} because it overlaps with an existing object`
+          )
+        }
+      }
+    }
+    this.state.merge(shapeMatrix, pos)
   }
 
-  remove(pos: IPosition, entity: IEntity) {
-    const shapeMatrix = entity.shape.asMatrix().fill(EMPTY)
+  /**
+   * A random EMPTY position in the grid
+   */
+  spawnPoint(): IPosition {
+    const x = Math.floor(Math.random() * this.rows)
+    const y = Math.floor(Math.random() * this.cols)
+    console.log('spawning at', x, y)
+    while (this.state.data[x][y] !== EMPTY) {
+      return this.spawnPoint()
+    }
+    return { x, y }
+  }
+
+  remove(pos: IPosition, obj: Obj) {
+    const shapeMatrix = obj.shape.asMatrix().fill(EMPTY)
     this.state.merge(shapeMatrix, pos)
   }
 

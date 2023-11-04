@@ -11,12 +11,20 @@ enum Mode {
 
 const posAsKey = (pos: IPosition) => `${pos.x},${pos.y}`
 
+export interface IEnvironment {
+  m: number,
+  n: number,
+  canvas?: HTMLCanvasElement,
+  ctx?: CanvasRenderingContext2D,
+  scale: number
+}
+
 export class Environment {
   m: number
   n: number
   grid: Grid
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
+  canvas?: HTMLCanvasElement
+  ctx?: CanvasRenderingContext2D
   scale: number
   mode: Mode
   ids: Set<number>
@@ -25,19 +33,13 @@ export class Environment {
   objects: Obj[]
   activeCMD: Set<string>
 
-  constructor(
-    m: number,
-    n: number,
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D,
-    scale: number
-  ) {
-    this.m = m
-    this.n = n
-    this.grid = new Grid(m, n)
-    this.canvas = canvas
-    this.ctx = ctx
-    this.scale = scale
+  constructor(config: IEnvironment) {
+    this.m = config.m
+    this.n = config.n
+    this.grid = new Grid(config.m, config.n)
+    this.canvas = config.canvas
+    this.ctx = config.ctx
+    this.scale = config.scale
     this.mode = Mode.GAME
     this.ids = new Set()
     this.idMap = new Map()
@@ -45,7 +47,7 @@ export class Environment {
     this.objects = []
     this.activeCMD = new Set()
     window.addEventListener('keydown', this.handleKeyDown.bind(this))
-    this.canvas.addEventListener('click', this.handleClick.bind(this))
+    this.canvas?.addEventListener('click', this.handleClick.bind(this))
   }
 
   getId() {
@@ -176,7 +178,15 @@ export class Environment {
     let avgFPS = 0;
     let fps = 0;
     const renderLoop = () => {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      const ctx = this.ctx;
+      const canvas = this.canvas;
+      if (!ctx) {
+        return
+      }
+      if (!canvas) {
+        return
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
       const now = performance.now()
       times = times.filter((timestamp) => timestamp >= now - 1000);
       times.push(now);
@@ -186,12 +196,12 @@ export class Environment {
         avgFPS = fpsHist.reduce((a, b) => a + b, 0) / fpsHist.length;
         fpsHist = [];
       }
-      this.ctx.fillStyle = 'black'
-      this.ctx.fillText(`FPS: ${avgFPS.toFixed(1)}`, this.canvas.width - 100, 20)
-      this.ctx.fillText(`Mode: ${this.mode}`, this.canvas.width - 100, 40)
-      this.grid.render(this.ctx, this.scale)
+      ctx.fillStyle = 'black'
+      ctx.fillText(`FPS: ${avgFPS.toFixed(1)}`, canvas.width - 100, 20)
+      ctx.fillText(`Mode: ${this.mode}`, canvas.width - 100, 40)
+      this.grid.render(ctx, this.scale)
       for (const object of this.objects) {
-        object.render(this.ctx, this.scale)
+        object.render(ctx, this.scale)
       }
       requestAnimationFrame(renderLoop)
     }

@@ -19,7 +19,13 @@ const viewSetup = () => {
 
 
 const { canvas, ctx } = viewSetup();
-const env = new Environment(50, 50, canvas, ctx, 20);
+const env = new Environment({
+    m: 20,
+    n: 20,
+    canvas,
+    ctx,
+    scale: 20,
+});
 env.load();
 
 const p1Id = env.getId();

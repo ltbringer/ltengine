@@ -44,8 +44,8 @@ export class Matrix {
 
     for (let i = 0; i < m2.m; i++) {
       for (let j = 0; j < m2.n; j++) {
-        const i_ = i + position.y
-        const j_ = j + position.x
+        const i_ = i + position.x
+        const j_ = j + position.y
         this.data[i_][j_] = m2.data[i][j]
       }
     }

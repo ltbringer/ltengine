@@ -17,4 +17,13 @@ export class Grid {
   insert(pos: Position, entity: IEntity) {
     this.state.merge(entity.shape.asMatrix(), pos)
   }
+
+  render(ctx: CanvasRenderingContext2D, scale: number) {
+    this.state.data.forEach((row, i) => {
+      row.forEach((col, j) => {
+        ctx.strokeStyle = 'black'
+        ctx.strokeRect(j * scale, i * scale, scale, scale)
+      })
+    })
+  }
 }

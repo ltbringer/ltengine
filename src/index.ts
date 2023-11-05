@@ -20,8 +20,8 @@ const viewSetup = () => {
 
 const { canvas, ctx } = viewSetup();
 const env = new Environment({
-    m: 20,
-    n: 20,
+    m: 50,
+    n: 50,
     canvas,
     ctx,
     scale: 20,
@@ -38,7 +38,12 @@ const p1 = new Actor({
     height: 1,
     color: 'red',
     collisionEffect: CollisionEffects.BLOCK,
+    speed: {
+        x: 1,
+        y: 1,
+    },
+    rigidity: 1,
 }, env);
 
 env.render();
-env.registerEntity(p1);
+env.registerActor(p1);

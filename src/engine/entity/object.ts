@@ -15,6 +15,7 @@ export class Obj implements IEntity {
   env: Environment
   color: string
   shape: Rectangle
+  rigidity: number
   constructor(config: IEntity, env: Environment) {
     // Representational properties
     this.id = config.id
@@ -27,6 +28,7 @@ export class Obj implements IEntity {
     this.height = config.height
     this.color = config.color
     this.shape = new Rectangle(this.width, this.height, this.id)
+    this.rigidity = config.rigidity
     this.collisionEffect = config.collisionEffect
 
     this.env = env

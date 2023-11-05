@@ -20,4 +20,5 @@ export interface IEntity {
   position: IPosition
   collisionEffect: CollisionEffects
   color: string
+  rigidity: number
 }
